@@ -1,0 +1,99 @@
+package com.example.validationapp
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var etUsername: EditText
+    private lateinit var etId: EditText
+    private lateinit var btnValidate: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        etUsername = findViewById(R.id.etUsername)
+        etId = findViewById(R.id.etId)
+        btnValidate = findViewById(R.id.btnValidate)
+
+        btnValidate.setOnClickListener {
+            validateInputs()
+        }
+    }
+
+    private fun validateInputs() {
+
+        val username = etUsername.text.toString().trim()
+        val id = etId.text.toString().trim()
+
+        // i) Check empty fields
+        if (username.isEmpty()) {
+            etUsername.error = "Username cannot be empty"
+            etUsername.requestFocus()
+            return
+        }
+
+        if (id.isEmpty()) {
+            etId.error = "ID cannot be empty"
+            etId.requestFocus()
+            return
+        }
+
+        // ii) Username must contain only alphabets
+        val usernameRegex = Regex("^[A-Za-z]+$")
+
+        if (!usernameRegex.matches(username)) {
+            etUsername.error = "Username must contain only alphabets"
+            etUsername.requestFocus()
+            return
+        }
+
+        // iii) ID must contain exactly 4 digits
+        val idRegex = Regex("^[0-9]{4}$")
+
+        if (!idRegex.matches(id)) {
+            etId.error = "ID must be exactly 4 digits"
+            etId.requestFocus()
+            return
+        }
+
+        Toast.makeText(this, "Validation Successful!", Toast.LENGTH_LONG).show()
+    }
+}
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Username"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/etId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter 4-digit ID"
+        android:inputType="number"
+        android:maxLength="4"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/btnValidate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Validate"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>
