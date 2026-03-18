@@ -1,0 +1,83 @@
+package com.example.indianpan
+
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val etPan = findViewById<EditText>(R.id.etPan)
+        val etPincode = findViewById<EditText>(R.id.etPincode)
+        val btnValidate = findViewById<Button>(R.id.btnValidate)
+
+        btnValidate.setOnClickListener {
+
+            val pan = etPan.text.toString().trim()
+            val pincode = etPincode.text.toString().trim()
+
+            // i) Check empty fields
+            if (pan.isEmpty() || pincode.isEmpty()) {
+                Toast.makeText(this, "Both fields should not be empty", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // ii) PAN Card validation (10 alphanumeric characters)
+            val panPattern = "^[A-Za-z0-9]{10}$"
+            if (!pan.matches(panPattern.toRegex())) {
+                Toast.makeText(this, "PAN must be exactly 10 alphanumeric characters", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            // iii) Pincode validation (6-digit numeric)
+            val pincodePattern = "^[0-9]{6}$"
+            if (!pincode.matches(pincodePattern.toRegex())) {
+                Toast.makeText(this, "Pincode must be exactly 6 digits", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            Toast.makeText(this, "Validation Successful!", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/etPan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter PAN Card Number"
+        android:inputType="text"
+        android:maxLength="10"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etPincode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter City Pincode"
+        android:inputType="number"
+        android:maxLength="6"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/btnValidate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Validate"/>
+
+</LinearLayout>
