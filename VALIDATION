@@ -1,0 +1,106 @@
+package com.example.validationapp
+
+import android.os.Bundle
+import android.util.Patterns
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var etEmail: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var btnValidate: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        etEmail = findViewById(R.id.etEmail)
+        etPassword = findViewById(R.id.etPassword)
+        btnValidate = findViewById(R.id.btnValidate)
+
+        btnValidate.setOnClickListener {
+            validateInputs()
+        }
+    }
+
+    private fun validateInputs() {
+
+        val email = etEmail.text.toString().trim()
+        val password = etPassword.text.toString().trim()
+
+        // i) Check if fields are empty
+        if (email.isEmpty()) {
+            etEmail.error = "Email cannot be empty"
+            etEmail.requestFocus()
+            return
+        }
+
+        if (password.isEmpty()) {
+            etPassword.error = "Password cannot be empty"
+            etPassword.requestFocus()
+            return
+        }
+
+        // ii) Validate proper college email
+        // Change domain according to your college
+        val collegeDomain = "@college.edu"
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            || !email.endsWith(collegeDomain)
+        ) {
+            etEmail.error = "Enter valid college email (example@college.edu)"
+            etEmail.requestFocus()
+            return
+        }
+
+        // iii) Password validation
+        // At least 12 chars, 1 uppercase, 1 digit, 1 special symbol
+        val passwordRegex =
+            Regex("^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#\$%^&+=!]).{12,}$")
+
+        if (!passwordRegex.matches(password)) {
+            etPassword.error =
+                "Password must be 12+ chars, include 1 uppercase, 1 number & 1 special symbol"
+            etPassword.requestFocus()
+            return
+        }
+
+        Toast.makeText(this, "Validation Successful!", Toast.LENGTH_LONG).show()
+    }
+}
+XML
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Username"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/etId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter 4-digit ID"
+        android:inputType="number"
+        android:maxLength="4"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/btnValidate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Validate"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>
