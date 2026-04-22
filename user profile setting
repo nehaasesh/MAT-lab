@@ -1,0 +1,203 @@
+activity_main :
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name:" />
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Enter your name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Enter your email" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Age:" />
+
+        <EditText
+            android:id="@+id/etAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Enter your age" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favourite Colour:" />
+
+        <RadioGroup
+            android:id="@+id/rgColour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbRed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Red" />
+
+            <RadioButton
+                android:id="@+id/rbBlue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blue" />
+
+            <RadioButton
+                android:id="@+id/rbGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Green" />
+
+            <RadioButton
+                android:id="@+id/rbYellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yellow" />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Biography:" />
+
+        <EditText
+            android:id="@+id/etBiography"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:inputType="textMultiLine"
+            android:gravity="start|top"
+            android:hint="Write your biography here..." />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Save Profile" />
+
+    </LinearLayout>
+</ScrollView>
+
+
+MainActivity :
+
+package com.example.userprofilesettings
+
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    // Declare all UI elements
+    lateinit var etName: EditText
+    lateinit var etEmail: EditText
+    lateinit var etAge: EditText
+    lateinit var etBiography: EditText
+    lateinit var rgColour: RadioGroup
+    lateinit var btnSave: Button
+
+    // Declare SharedPreferences
+    lateinit var sharedPreferences: SharedPreferences
+
+    // Key constants — prevents typo bugs
+    companion object {
+        const val PREFS_NAME   = "UserProfilePrefs"
+        const val KEY_NAME     = "key_name"
+        const val KEY_EMAIL    = "key_email"
+        const val KEY_AGE      = "key_age"
+        const val KEY_COLOUR   = "key_colour"
+        const val KEY_BIO      = "key_biography"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Link UI elements to their XML IDs
+        etName      = findViewById(R.id.etName)
+        etEmail     = findViewById(R.id.etEmail)
+        etAge       = findViewById(R.id.etAge)
+        etBiography = findViewById(R.id.etBiography)
+        rgColour    = findViewById(R.id.rgColour)
+        btnSave     = findViewById(R.id.btnSave)
+
+        // Save button click — saves all fields manually
+        btnSave.setOnClickListener {
+            saveData()
+            Toast.makeText(this, "Profile Saved!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Called every time the app comes to the foreground — RESTORES data
+    override fun onResume() {
+        super.onResume()
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        // Retrieve saved values (defaults shown if nothing saved yet)
+        etName.setText(sharedPreferences.getString(KEY_NAME, ""))
+        etEmail.setText(sharedPreferences.getString(KEY_EMAIL, ""))
+        etAge.setText(sharedPreferences.getString(KEY_AGE, ""))
+        etBiography.setText(sharedPreferences.getString(KEY_BIO, ""))
+
+        // Restore RadioGroup selection
+        val savedColourId = sharedPreferences.getInt(KEY_COLOUR, -1)
+        if (savedColourId != -1) {
+            rgColour.check(savedColourId)
+        }
+    }
+
+    // Called every time the app goes to the background — SAVES data automatically
+    override fun onPause() {
+        super.onPause()
+        saveData()
+    }
+
+    // Reusable save function
+    private fun saveData() {
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        editor.putString(KEY_NAME,  etName.text.toString())
+        editor.putString(KEY_EMAIL, etEmail.text.toString())
+        editor.putString(KEY_AGE,   etAge.text.toString())
+        editor.putString(KEY_BIO,   etBiography.text.toString())
+        editor.putInt(KEY_COLOUR,   rgColour.checkedRadioButtonId)
+
+        editor.apply() // Save asynchronously (recommended)
+    }
+}
