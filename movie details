@@ -1,0 +1,148 @@
+MainActivity.java:
+package com.example.movieapp;
+
+import android.os.Bundle;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button btnBasic, btnAdditional;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnBasic = findViewById(R.id.btnBasic);
+        btnAdditional = findViewById(R.id.btnAdditional);
+
+        // Load default fragment
+        loadFragment(new BasicDetailsFragment());
+
+        btnBasic.setOnClickListener(v -> loadFragment(new BasicDetailsFragment()));
+        btnAdditional.setOnClickListener(v -> loadFragment(new AdditionalDetailsFragment()));
+    }
+
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commit();
+    }
+}
+BasicDetailsFragment.java:
+package com.example.movieapp;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+
+public class BasicDetailsFragment extends Fragment {
+
+    public BasicDetailsFragment() {}
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_basic_details, container, false);
+    }
+}
+AdditionalDetailsFragment.java:
+package com.example.movieapp;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+
+public class AdditionalDetailsFragment extends Fragment {
+
+    public AdditionalDetailsFragment() {}
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_additional_details, container, false);
+    }
+}
+activity_main.xml:
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnBasic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Basic Details"/>
+
+        <Button
+            android:id="@+id/btnAdditional"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Additional Details"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
+fragment_basic_details.xml:
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Movie ID"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Name"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Language"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Year"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Category"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Duration"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="IMDB Ratings"/>
+
+    </LinearLayout>
+</ScrollView>
+fragment_additional_details.xml:
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Cast"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Director"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Music"/>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Producer"/>
+
+    </LinearLayout>
+</ScrollView>
