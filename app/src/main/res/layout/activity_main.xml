@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="💧 Water Reminder App"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/countText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Water Count: 0"
+        android:textSize="22sp"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/drinkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Drink Water"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
